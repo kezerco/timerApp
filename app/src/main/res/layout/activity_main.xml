@@ -1,0 +1,50 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerTimer"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:popupBackground="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/buttonStartStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:text="Start"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/buttonSoundSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Sound"
+        android:layout_marginTop="24dp" />
+
+    <Switch
+        android:id="@+id/switchRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Repeat"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
