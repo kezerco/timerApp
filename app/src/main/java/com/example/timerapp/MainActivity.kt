@@ -1,6 +1,8 @@
 package com.example.timerapp
 
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -14,6 +16,7 @@ import android.os.CountDownTimer
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Create the notification channel
+        createNotificationChannel()
 
         // Initialize UI components
         spinnerTimer = findViewById(R.id.spinnerTimer)
@@ -78,6 +84,21 @@ class MainActivity : AppCompatActivity() {
         // Change sound selection
         buttonSoundSelection.setOnClickListener {
             selectNotificationSound()
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "timer_channel"
+            val channelName = "Timer Notifications"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = "Notifications for timer events"
+            }
+
+            // Register the channel with the system
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -130,20 +151,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun notifyUser() {
-        // Check if selectedSoundUri is null
+        // Play the selected sound
         if (selectedSoundUri == null) {
             selectedSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         }
-
-        // Play the selected sound
         val ringtone = RingtoneManager.getRingtone(applicationContext, selectedSoundUri)
         ringtone.play()
 
-        // Show a visual indication
+        // Show a visual indication in the app
         textViewTimerStatus.text = "Timer is up!"
 
         // Show a toast message
         Toast.makeText(this, "Timer finished!", Toast.LENGTH_SHORT).show()
+
+        // Send a system notification
+        sendNotification()
+    }
+
+    private fun sendNotification() {
+        val notificationId = 1
+        val channelId = "timer_channel"
+
+        // Build the notification
+        val notification: Notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Timer Finished")
+            .setContentText("Your timer has completed!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setSound(selectedSoundUri)
+            .setAutoCancel(true)
+            .build()
+
+        // Send the notification
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, notification)
     }
 
     private fun selectNotificationSound() {
